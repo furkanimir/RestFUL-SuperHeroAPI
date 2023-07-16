@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SuperHeroAPI.Models;
+using SuperHeroAPI.Services.SuperHeroServices;
 
 namespace SuperHeroAPI.Controllers
 {
@@ -8,27 +9,13 @@ namespace SuperHeroAPI.Controllers
 	[ApiController]
 	public class SuperHeroController : ControllerBase
 	{
-		private static List<SuperHero> superHeroes = new List<SuperHero>
-			{
-				new SuperHero{Id=1,
-					Name="Spider-Man",
-					FirstName="Peter",
-					LastName="Parker",
-					Place="New York"
-				},
-				new SuperHero{Id=2,
-					Name="Hulk",
-					FirstName="Robert Bruce",
-					LastName="Banner",
-					Place="New York"
-				},
-				new SuperHero{Id=3,
-					Name="Iron Man",
-					FirstName="Tony",
-					LastName="Stark",
-					Place="New York"
-				}
-			};
+		private readonly ISuperHeroService _superHeroService;
+
+		public SuperHeroController(ISuperHeroService superHeroService) 
+		{
+			_superHeroService = superHeroService;
+		}
+		
 
 		[HttpGet]
 		public async Task<ActionResult<List<SuperHero>>> GetAllHeroes()
@@ -38,7 +25,7 @@ namespace SuperHeroAPI.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<List<SuperHero>>> GetSingleHero(int id)
+		public async Task<ActionResult<SuperHero>> GetSingleHero(int id)
 		{
 			var hero = superHeroes.Find(x => x.Id == id);
 			if(hero == null)
@@ -52,5 +39,26 @@ namespace SuperHeroAPI.Controllers
 			superHeroes.Add(hero);
 			return Ok(hero);
 		}//32:25
+
+		[HttpPut("{id}")]
+		public async Task<ActionResult<List<SuperHero>>> UpdateHero(int id, SuperHero requ_hero)
+		{
+			var hero = _superHeroService.UpdateHero(id, requ_hero);
+			if (hero == null)
+				return NotFound("This hero does not exist. <--Update message");
+
+			return Ok(hero);
+		}////50.DAKİKA
+
+		[HttpDelete("{id}")]
+		public async Task<ActionResult<List<SuperHero>>> DeleteHero(int id)
+		{
+			var result = _superHeroService.DeleteHero(id);
+			if (result == null)
+				return NotFound("silmek için id bulunamadı");
+
+			return Ok(result);
+		}
+
 	}
 }
