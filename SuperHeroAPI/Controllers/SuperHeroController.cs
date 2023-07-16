@@ -17,6 +17,12 @@ namespace SuperHeroAPI.Controllers
 					Place="New York"
 				},
 				new SuperHero{Id=2,
+					Name="Hulk",
+					FirstName="Robert Bruce",
+					LastName="Banner",
+					Place="New York"
+				},
+				new SuperHero{Id=3,
 					Name="Iron Man",
 					FirstName="Tony",
 					LastName="Stark",
@@ -35,7 +41,16 @@ namespace SuperHeroAPI.Controllers
 		public async Task<ActionResult<List<SuperHero>>> GetSingleHero(int id)
 		{
 			var hero = superHeroes.Find(x => x.Id == id);
+			if(hero == null)
+				return NotFound("This hero does not exist. <--message");
 			return Ok(hero);
 		}//24:50
+
+		[HttpPost]
+		public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
+		{
+			superHeroes.Add(hero);
+			return Ok(hero);
+		}//32:25
 	}
 }
