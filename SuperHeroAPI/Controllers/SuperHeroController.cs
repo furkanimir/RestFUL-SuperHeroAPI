@@ -20,42 +20,43 @@ namespace SuperHeroAPI.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<SuperHero>>> GetAllHeroes()
 		{
-			
-			return Ok(superHeroes);
+			var result = await _superHeroService.GetAllHeroes();
+			return Ok(result);
 		}
 
 		[HttpGet("{id}")]
 		public async Task<ActionResult<SuperHero>> GetSingleHero(int id)
 		{
-			var hero = superHeroes.Find(x => x.Id == id);
-			if(hero == null)
-				return NotFound("This hero does not exist. <--message");
-			return Ok(hero);
-		}//24:50
+			var result = await _superHeroService.GetSingleHero(id);
+			if (result is null)
+				return NotFound("Hero not found.");
+
+			return Ok(result);
+		}
 
 		[HttpPost]
 		public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
 		{
-			superHeroes.Add(hero);
-			return Ok(hero);
-		}//32:25
+			var result = await _superHeroService.AddHero(hero);
+			return Ok(result);
+		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult<List<SuperHero>>> UpdateHero(int id, SuperHero requ_hero)
+		public async Task<ActionResult<List<SuperHero>>> UpdateHero(int id, SuperHero request)
 		{
-			var hero = _superHeroService.UpdateHero(id, requ_hero);
-			if (hero == null)
-				return NotFound("This hero does not exist. <--Update message");
+			var result = await _superHeroService.UpdateHero(id, request);
+			if (result is null)
+				return NotFound("Hero not found.");
 
-			return Ok(hero);
-		}////50.DAKİKA
+			return Ok(result);
+		}
 
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<List<SuperHero>>> DeleteHero(int id)
 		{
-			var result = _superHeroService.DeleteHero(id);
-			if (result == null)
-				return NotFound("silmek için id bulunamadı");
+			var result = await _superHeroService.DeleteHero(id);
+			if (result is null)
+				return NotFound("Hero not found.");
 
 			return Ok(result);
 		}
