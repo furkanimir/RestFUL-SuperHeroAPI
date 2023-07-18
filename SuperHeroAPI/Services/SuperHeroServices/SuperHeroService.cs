@@ -60,7 +60,7 @@ namespace SuperHeroAPI.Services.SuperHeroServices
 			await _context.SaveChangesAsync();
 
 			return await _context.SuperHeroes.ToListAsync();
-		}//1:19
+		}//1:19:
 
 
 	}
